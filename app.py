@@ -14,11 +14,15 @@ cursor = cnxn.cursor()
 sqs = boto3.resource('sqs', region_name='us-west-2')
 queue = sqs.get_queue_by_name(QueueName='sql2')
 
-
+print("Hello")
 def processInsert(data):
-    tsql = "INSERT INTO customer (id, cname) VALUES (?,?);"
-    with cursor.execute(tsql, data['uid'], data['customername']):
-        print('Successfuly Inserted!')
+    try:
+        tsql = "INSERT INTO customer (id, cname) VALUES (?,?);"
+        with cursor.execute(tsql, data['uid'], data['customername']):
+            print('Successfuly Inserted!')
+    except pyodbc.Error as ex:
+        sqlstate = ex.args[1]
+        print(sqlstate) 
 
 def processUpdate(data):
     sql = ""
