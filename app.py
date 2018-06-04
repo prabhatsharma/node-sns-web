@@ -33,6 +33,15 @@ def processDelete(data):
     sql = ""
     print("deleting")
 
+def originInsert(data):
+    try:
+        tsql = "INSERT INTO customerorigin (id, origin) VALUES (?,?);"
+        with cursor.execute(tsql, data['uid'], data['origin']):
+            print('Origin Inserted!')
+    except pyodbc.Error as ex:
+        sqlstate = ex.args[1]
+        print(sqlstate)
+
 
 hostname = socket.gethostname()
 print('hostname: ', hostname)
@@ -50,6 +59,7 @@ while True:
         else:
             if body['dmlType'] == 'insert':
                 processInsert(body)
+                originInsert(body)
                 message.delete()
             elif body['dmlType'] == 'update':
                 processUpdate(body)
